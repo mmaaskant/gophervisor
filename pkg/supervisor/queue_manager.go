@@ -25,8 +25,8 @@ func newQueueManager() *queueManager {
 	return qm
 }
 
-// start Starts a GoRoutine that publishes all backed up tasks and shuts down once these tasks have been consumed.
-func (qm *queueManager) start() {
+// Start Starts a GoRoutine that publishes all backed up tasks and shuts down once these tasks have been consumed.
+func (qm *queueManager) Start() {
 	if qm.isRunning {
 		return
 	}
@@ -57,9 +57,9 @@ func (qm *queueManager) getNextInQueue() *unitOfWork {
 	return nil
 }
 
-// addToQueue looks the queue and publishes a task.
-// If there is no available worker to take the task, it calls start and handles the backed up message(s).
-func (qm *queueManager) addToQueue(uoe *unitOfWork) {
+// AddToQueue looks the queue and publishes a task.
+// If there is no available worker to take the task, it calls Start and handles the backed up message(s).
+func (qm *queueManager) AddToQueue(uoe *unitOfWork) {
 	qm.mutex.Lock()
 	defer qm.mutex.Unlock()
 	qm.queue[uoe] = false
@@ -67,24 +67,24 @@ func (qm *queueManager) addToQueue(uoe *unitOfWork) {
 	case qm.requestChannel <- uoe:
 		return
 	default:
-		qm.start()
+		qm.Start()
 	}
 }
 
-// removeFromQueue locks the queue and removes a completed task from the queue.
-func (qm *queueManager) removeFromQueue(uoe *unitOfWork) {
+// RemoveFromQueue locks the queue and removes a completed task from the queue.
+func (qm *queueManager) RemoveFromQueue(uoe *unitOfWork) {
 	qm.mutex.Lock()
 	defer qm.mutex.Unlock()
 	delete(qm.queue, uoe)
 }
 
-// isQueueEmpty locks the queue and checks if it is empty.
-func (qm *queueManager) isQueueEmpty() bool {
+// IsQueueEmpty locks the queue and checks if it is empty.
+func (qm *queueManager) IsQueueEmpty() bool {
 	qm.mutex.Lock()
 	defer qm.mutex.Unlock()
 	return len(qm.queue) == 0
 }
 
-func (qm *queueManager) shutdown() {
+func (qm *queueManager) Shutdown() {
 	close(qm.requestChannel)
 }

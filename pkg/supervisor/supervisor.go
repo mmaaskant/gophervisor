@@ -25,7 +25,7 @@ func NewSupervisor(numberOfWorkers int) *Supervisor {
 
 // start Starts the signaler which monitors workers and starts the workers shortly after.
 func (sv *Supervisor) start() {
-	sv.signaler.start()
+	sv.signaler.Start()
 	sv.startWorkers()
 }
 
@@ -36,7 +36,7 @@ func (sv *Supervisor) startWorkers() {
 			for uoe := range sv.queueManager.requestChannel {
 				sv.signaler.isDoneChannel <- false
 				(*uoe.Function)(sv.publishers[uoe.Function], uoe.Data, sv.responseChannels[uoe.Function])
-				sv.queueManager.removeFromQueue(uoe)
+				sv.queueManager.RemoveFromQueue(uoe)
 				sv.signaler.isDoneChannel <- true
 			}
 		}()
@@ -56,10 +56,10 @@ func (sv *Supervisor) Register(
 }
 
 // Shutdown gracefully shuts down all workers.
-// Run Shutdown in a separate routine in case you do not want to wait for shutdown to finish.
-// No new tasks should be published after shutdown has been called.
+// Run Shutdown in a separate routine in case you do not want to wait for Shutdown to finish.
+// No new tasks should be published after Shutdown has been called.
 func (sv *Supervisor) Shutdown() {
-	sv.signaler.shutdown()
+	sv.signaler.Shutdown()
 	for _, ch := range sv.responseChannels {
 		close(ch)
 	}

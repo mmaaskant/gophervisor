@@ -18,7 +18,7 @@ func newPublisher(qm *queueManager, f *func(p *Publisher, d interface{}, rch cha
 // Publish publishes a new task with the function provided during the creation of the Publisher.
 // The task will be run using the data provided.
 func (p *Publisher) Publish(data interface{}) {
-	p.queueManager.addToQueue(newUnitOfWork(p.function, data))
+	p.queueManager.AddToQueue(newUnitOfWork(p.function, data))
 }
 
 // unitOfWork carries the function to be executed and the data that it should be executed with.
