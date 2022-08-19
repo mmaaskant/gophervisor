@@ -17,14 +17,14 @@ import (
 func main() {
 	sv := supervisor.NewSupervisor(10) // Create a new supervisor with 10 workers in its pool
 	p, rch := sv.Register(func(p *supervisor.Publisher, d interface{}, rch chan interface{}) {
-		fmt.Println(d)                  // A unit of data that has been published
+		fmt.Println(d) // A unit of data that has been published
 		p.Publish("A new unit of data") // Publish a new unit of data to be processed using the same registered function
-		rch <- "A response message"     // Send a response
+		rch <- "A response message" // Send a response
 	})
-	p.Publish("Unit of data")   // Publish a new unit of data to the worker pool to process
-	go sv.Shutdown()            // Start the graceful shutdown of the Supervisor and skip waiting for the shutdown to finish
+	p.Publish("Unit of data") // Publish a new unit of data to the worker pool to process
+	go sv.Shutdown() // Start the graceful shutdown of the Supervisor and skip waiting for the shutdown to finish
 	for response := range rch { // Get responses, due to shutdown loop will end once all workers have completed
-		fmt.Println(response) //  // A single response from the worker pool
+		fmt.Println(response) // A single response from the worker pool
 	}
 }
 ```
