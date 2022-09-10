@@ -1,18 +1,16 @@
 package supervisor
 
 import (
-	"fmt"
-	"math/rand"
 	"testing"
 )
 
 const supervisorTestData = "Supervisor test data"
-const supervisorTestAmountOfWorkers = 5
+const supervisorTestAmountOfWorkers = 10
 const supervisorAmountOfTasks = 10000
 
 func TestNewSupervisor(t *testing.T) {
 	sv := NewSupervisor(supervisorTestAmountOfWorkers)
-	p, rch := sv.Register(func(p *Publisher, d interface{}, rch chan interface{}) {
+	p, rch := sv.Register(func(p *Publisher, d any, rch chan any) {
 		rch <- d
 	})
 	p.Publish(supervisorTestData)
@@ -20,8 +18,7 @@ func TestNewSupervisor(t *testing.T) {
 		t.Errorf("Expected %s got %v", supervisorTestData, d)
 	}
 	for i := 0; i < supervisorAmountOfTasks; i++ {
-		s := fmt.Sprintf("%s-%d", supervisorTestData, rand.Intn(10000))
-		p.Publish(s)
+		p.Publish(supervisorTestData)
 	}
 	go sv.Shutdown()
 	counter := 0

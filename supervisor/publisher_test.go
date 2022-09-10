@@ -7,7 +7,7 @@ import (
 const publisherTestData = "Publisher test data"
 
 func TestPublisher_Publish(t *testing.T) {
-	f := func(p *Publisher, d interface{}, rch chan interface{}) {}
+	f := func(p *Publisher, d any, rch chan any) {}
 	p := newPublisher(newQueueManager(), &f)
 	for i := 0; i <= 100; i++ {
 		p.Publish(publisherTestData)
