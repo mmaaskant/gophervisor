@@ -12,7 +12,7 @@ const supervisorAmountOfTasks = 10000
 
 func TestNewSupervisor(t *testing.T) {
 	sv := NewSupervisor(supervisorTestAmountOfWorkers)
-	p, rch := sv.Register(func(p *Publisher, d interface{}, rch chan interface{}) {
+	p, rch := sv.Register(func(p *Publisher, d any, rch chan any) {
 		rch <- d
 	})
 	p.Publish(supervisorTestData)

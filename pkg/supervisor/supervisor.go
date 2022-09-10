@@ -4,8 +4,8 @@ package supervisor
 type Supervisor struct {
 	numberOfWorkers  int
 	queueManager     *queueManager
-	publishers       map[*func(p *Publisher, d interface{}, rch chan interface{})]*Publisher
-	responseChannels map[*func(p *Publisher, d interface{}, rch chan interface{})]chan interface{}
+	publishers       map[*func(p *Publisher, d any, rch chan any)]*Publisher
+	responseChannels map[*func(p *Publisher, d any, rch chan any)]chan any
 }
 
 // NewSupervisor creates a new Supervisor instance and amount of workers equal to numberOfWorkers.
@@ -13,8 +13,8 @@ func NewSupervisor(numberOfWorkers int) *Supervisor {
 	sv := &Supervisor{
 		numberOfWorkers,
 		newQueueManager(),
-		make(map[*func(p *Publisher, d interface{}, rch chan interface{})]*Publisher),
-		make(map[*func(p *Publisher, d interface{}, rch chan interface{})]chan interface{}),
+		make(map[*func(p *Publisher, d any, rch chan any)]*Publisher),
+		make(map[*func(p *Publisher, d any, rch chan any)]chan any),
 	}
 	sv.startWorkers()
 	return sv
@@ -35,9 +35,9 @@ func (sv *Supervisor) startWorkers() {
 // Register registers a new function and returns an instance of Publisher.
 // This Publisher instance publishes new tasks that'll be run within the provided function.
 func (sv *Supervisor) Register(
-	f func(p *Publisher, d interface{}, rch chan interface{}),
-) (*Publisher, chan interface{}) {
-	rch := make(chan interface{})
+	f func(p *Publisher, d any, rch chan any),
+) (*Publisher, chan any) {
+	rch := make(chan any)
 	p := newPublisher(sv.queueManager, &f)
 	sv.publishers[&f] = p
 	sv.responseChannels[&f] = rch

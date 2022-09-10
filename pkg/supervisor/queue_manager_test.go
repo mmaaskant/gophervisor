@@ -7,7 +7,7 @@ import (
 const queueManagerTestData = "Queue manager test data"
 
 func TestQueueManager_IsQueueEmpty(t *testing.T) {
-	f := func(p *Publisher, d interface{}, rch chan interface{}) {}
+	f := func(p *Publisher, d any, rch chan any) {}
 	qm := newQueueManager()
 	p := newPublisher(qm, &f)
 
@@ -21,7 +21,7 @@ func TestQueueManager_IsQueueEmpty(t *testing.T) {
 }
 
 func TestQueueManager_AddToQueue(t *testing.T) {
-	f := func(p *Publisher, d interface{}, rch chan interface{}) {}
+	f := func(p *Publisher, d any, rch chan any) {}
 	qm := newQueueManager()
 	p := newPublisher(qm, &f)
 
@@ -38,7 +38,7 @@ func TestQueueManager_AddToQueue(t *testing.T) {
 }
 
 func TestQueueManager_Start(t *testing.T) {
-	f := func(p *Publisher, d interface{}, rch chan interface{}) {}
+	f := func(p *Publisher, d any, rch chan any) {}
 	qm := newQueueManager()
 	p := newPublisher(qm, &f)
 	p.Publish(publisherTestData)
